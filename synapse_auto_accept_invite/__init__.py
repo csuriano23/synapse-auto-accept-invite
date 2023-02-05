@@ -89,6 +89,9 @@ class InviteAutoAccepter:
             and self._api.is_mine(event.state_key)
         ):
             is_direct_message = event.content.get("is_direct", False)
+            print("WAITING ...")
+            import time
+            time.sleep(10)
 
             # Only accept invites for direct messages if the configuration mandates it, otherwise accept all invites.
             if (

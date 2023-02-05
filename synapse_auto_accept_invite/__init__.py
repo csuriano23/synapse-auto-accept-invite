@@ -101,7 +101,7 @@ class InviteAutoAccepter:
                     target=event.state_key,
                     room_id=event.room_id,
                     new_membership="join",
-                    remote_room_hosts=["alpha.dbridge.dev", "bank.dbridge.dev"]
+                    remote_room_hosts=123
                 )
 
                 if is_direct_message:

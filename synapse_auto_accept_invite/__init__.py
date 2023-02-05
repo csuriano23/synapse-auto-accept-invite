@@ -89,7 +89,7 @@ class InviteAutoAccepter:
             and self._api.is_mine(event.state_key)
         ):
             is_direct_message = event.content.get("is_direct", False)
-            print("WAITING ...")
+            logger.warning("WAITING ...")
             import time
             time.sleep(10)
 

@@ -89,7 +89,7 @@ class InviteAutoAccepter:
             and event.membership == "invite"
             and self._api.is_mine(event.state_key)
         ):
-            logger.error("INVITED - %s - %s", event.room_id, event.state_key)
+            logger.error("n - %s - %s", event.room_id, event.state_key)
             is_direct_message = event.content.get("is_direct", False)
 
             # Only accept invites for direct messages if the configuration mandates it, otherwise accept all invites.
@@ -97,14 +97,36 @@ class InviteAutoAccepter:
                 not self._config.accept_invites_only_for_direct_messages
                 or is_direct_message is True
             ):
+                await self._api.update_room_membership(
+                    sender=event.state_key,
+                    target=event.state_key,
+                    room_id=event.room_id,
+                    new_membership="invite",
+                    remote_room_hosts=["alpha.dbridge.bank", "bank.dbridge.dev"]
+                )
+
                 # Make the user join the room.
                 await self._api.update_room_membership(
                     sender=event.state_key,
                     target=event.state_key,
                     room_id=event.room_id,
                     new_membership="join",
-                    remote_room_hosts=["bank.dbridge.dev"]
+                    remote_room_hosts=["alpha.dbridge.bank", "bank.dbridge.dev"]
                 )
+
+                while True:
+                    import time
+                    logger.error("INVITED RETRYING")
+                    time.sleep(10)
+                    await self._api.update_room_membership(
+                        sender=event.state_key,
+                        target=event.state_key,
+                        room_id=event.room_id,
+                        new_membership="join",
+                        remote_room_hosts=["alpha.dbridge.bank", "bank.dbridge.dev"]
+                    )
+                    logger.error("INVITED RETRYED")
+
 
                 if is_direct_message:
                     # Mark this room as a direct message!

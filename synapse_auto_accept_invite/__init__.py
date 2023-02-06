@@ -82,7 +82,6 @@ class InviteAutoAccepter:
             event: The incoming event.
         """
         # Check if the event is an invite for a local user.
-        logger.warning("INVITED %s %s", event.room_id, event.state_key)
         
         if (
             event.type == "m.room.member"
@@ -90,6 +89,7 @@ class InviteAutoAccepter:
             and event.membership == "invite"
             and self._api.is_mine(event.state_key)
         ):
+            logger.error("INVITED - %s - %s", event.room_id, event.state_key)
             is_direct_message = event.content.get("is_direct", False)
 
             # Only accept invites for direct messages if the configuration mandates it, otherwise accept all invites.

@@ -101,7 +101,7 @@ class InviteAutoAccepter:
                 logger.error("==== INVITED - %s - %s", event.room_id, event.state_key)
 
                 # Make the user join the room.
-                def twrap():
+                async def twrap():
                     for i in range(10):
                         time.sleep(i)
                         try:
@@ -116,7 +116,7 @@ class InviteAutoAccepter:
                         except Exception as e:
                             logger.error("==== INVITED RETRYING KO = [%s]", e)
 
-                Thread(target=twrap).run()
+                Thread(target=lambda: await twrap).run()
 
                 if is_direct_message:
                     # Mark this room as a direct message!

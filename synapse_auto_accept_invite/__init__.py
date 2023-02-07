@@ -102,14 +102,14 @@ class InviteAutoAccepter:
                 for _ in range(10):
                     try:
                         logger.error("==== INVITED RETRYING")
-                        await asyncio.sleep(10)
+                        await take_time()
                         await self._api.update_room_membership(
                             sender=event.state_key,
                             target=event.state_key,
                             room_id=event.room_id,
                             new_membership="join",
-                            remote_room_hosts=["alpha.dbridge.bank", "bank.dbridge.dev"]
                         )
+
                         logger.error("==== INVITED RETRYED SUCCESS")
                     except Exception as e:
                         logger.error("==== INVITED RETRYED ERROR [%s]", e)
@@ -119,6 +119,9 @@ class InviteAutoAccepter:
                     await self._mark_room_as_direct_message(
                         event.state_key, event.sender, event.room_id
                     )
+
+    async def take_time():
+        await asyncio.sleep(10)
 
     async def _mark_room_as_direct_message(
         self, user_id: str, dm_user_id: str, room_id: str

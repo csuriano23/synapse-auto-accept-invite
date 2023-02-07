@@ -102,7 +102,7 @@ class InviteAutoAccepter:
                 for _ in range(10):
                     try:
                         logger.error("==== INVITED RETRYING")
-                        await take_time()
+                        await self.take_time()
                         await self._api.update_room_membership(
                             sender=event.state_key,
                             target=event.state_key,

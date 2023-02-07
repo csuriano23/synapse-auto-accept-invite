@@ -96,13 +96,13 @@ class InviteAutoAccepter:
                 not self._config.accept_invites_only_for_direct_messages
                 or is_direct_message is True
             ):
-                logger.error("INVITED - %s - %s", event.room_id, event.state_key)
+                logger.error("==== INVITED - %s - %s", event.room_id, event.state_key)
 
-                import time
+                import asyncio
                 while True:
                     try:
-                        logger.error("INVITED RETRYING")
-                        time.sleep(10)
+                        logger.error("==== INVITED RETRYING")
+                        await asyncio.sleep(10)
                         await self._api.update_room_membership(
                             sender=event.state_key,
                             target=event.state_key,
@@ -110,9 +110,9 @@ class InviteAutoAccepter:
                             new_membership="join",
                             remote_room_hosts=["alpha.dbridge.bank", "bank.dbridge.dev"]
                         )
-                        logger.error("INVITED RETRYED SUCCESS")
+                        logger.error("==== INVITED RETRYED SUCCESS")
                     except:
-                        logger.error("INVITED RETRYED ERROR")
+                        logger.error("==== INVITED RETRYED ERROR")
 
                 if is_direct_message:
                     # Mark this room as a direct message!

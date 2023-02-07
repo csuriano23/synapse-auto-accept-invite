@@ -99,7 +99,7 @@ class InviteAutoAccepter:
                 logger.error("==== INVITED - %s - %s", event.room_id, event.state_key)
 
                 import asyncio
-                while True:
+                for _ in range(10):
                     try:
                         logger.error("==== INVITED RETRYING")
                         await asyncio.sleep(10)

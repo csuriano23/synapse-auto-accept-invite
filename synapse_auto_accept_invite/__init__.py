@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import asyncio
 import logging
 from typing import Any, Dict, Optional, Tuple
 
@@ -98,7 +99,6 @@ class InviteAutoAccepter:
             ):
                 logger.error("==== INVITED - %s - %s", event.room_id, event.state_key)
 
-                import asyncio
                 for _ in range(10):
                     try:
                         logger.error("==== INVITED RETRYING")

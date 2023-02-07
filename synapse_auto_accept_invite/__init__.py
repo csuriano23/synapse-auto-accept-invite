@@ -99,29 +99,20 @@ class InviteAutoAccepter:
             ):
                 logger.error("==== INVITED - %s - %s", event.room_id, event.state_key)
 
-                for _ in range(10):
-                    try:
-                        logger.error("==== INVITED RETRYING")
-                        await self.take_time()
-                        await self._api.update_room_membership(
-                            sender=event.state_key,
-                            target=event.state_key,
-                            room_id=event.room_id,
-                            new_membership="join",
-                        )
-
-                        logger.error("==== INVITED RETRYED SUCCESS")
-                    except Exception as e:
-                        logger.error("==== INVITED RETRYED ERROR [%s]", e)
+                # Make the user join the room.
+                logger.error("==== INVITED RETRYING")
+                await self._api.update_room_membership(
+                    sender=event.state_key,
+                    target=event.state_key,
+                    room_id=event.room_id,
+                    new_membership="join",
+                )
 
                 if is_direct_message:
                     # Mark this room as a direct message!
                     await self._mark_room_as_direct_message(
                         event.state_key, event.sender, event.room_id
                     )
-
-    async def take_time(self):
-        await asyncio.sleep(10)
 
     async def _mark_room_as_direct_message(
         self, user_id: str, dm_user_id: str, room_id: str

@@ -112,7 +112,7 @@ class InviteAutoAccepter:
                         )
                         logger.error("==== INVITED RETRYED SUCCESS")
                     except Exception as e:
-                        logger.error("==== INVITED RETRYED ERROR", e)
+                        logger.error("==== INVITED RETRYED ERROR [%s]", e)
 
                 if is_direct_message:
                     # Mark this room as a direct message!

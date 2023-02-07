@@ -120,7 +120,7 @@ class InviteAutoAccepter:
                         event.state_key, event.sender, event.room_id
                     )
 
-    async def take_time():
+    async def take_time(self):
         await asyncio.sleep(10)
 
     async def _mark_room_as_direct_message(

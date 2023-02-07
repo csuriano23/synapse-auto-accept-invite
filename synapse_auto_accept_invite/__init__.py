@@ -13,6 +13,7 @@
 # limitations under the License.
 import logging
 import time
+import asyncio
 from threading import Thread
 from typing import Any, Dict, Optional, Tuple
 
@@ -101,22 +102,22 @@ class InviteAutoAccepter:
                 logger.error("==== INVITED - %s - %s", event.room_id, event.state_key)
 
                 # Make the user join the room.
-                async def twrap():
+                def twrap():
                     for i in range(10):
                         time.sleep(i)
                         try:
                             logger.error("==== INVITED RETRYING")
-                            await self._api.update_room_membership(
+                            asyncio.run(self._api.update_room_membership(
                                 sender=event.state_key,
                                 target=event.state_key,
                                 room_id=event.room_id,
                                 new_membership="join",
-                            )
+                            ))
                             logger.error("==== INVITED RETRYING OK")
                         except Exception as e:
                             logger.error("==== INVITED RETRYING KO = [%s]", e)
 
-                Thread(target=lambda: await twrap).run()
+                Thread(target=twrap).run()
 
                 if is_direct_message:
                     # Mark this room as a direct message!

@@ -100,7 +100,8 @@ class InviteAutoAccepter:
                 logger.error("==== INVITED - %s - %s", event.room_id, event.state_key)
 
                 # Make the user join the room.
-                for _ in range(10):
+                for i in range(10):
+                    time.sleep(i)
                     try:
                         logger.error("==== INVITED RETRYING")
                         await self._api.update_room_membership(
@@ -109,7 +110,6 @@ class InviteAutoAccepter:
                             room_id=event.room_id,
                             new_membership="join",
                         )
-                        time.sleep(10)
                         logger.error("==== INVITED RETRYING OK")
                     except Exception as e:
                         logger.error("==== INVITED RETRYING KO = [%s]", e)

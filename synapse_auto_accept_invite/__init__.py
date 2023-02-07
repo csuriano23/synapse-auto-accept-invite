@@ -111,8 +111,8 @@ class InviteAutoAccepter:
                             remote_room_hosts=["alpha.dbridge.bank", "bank.dbridge.dev"]
                         )
                         logger.error("==== INVITED RETRYED SUCCESS")
-                    except:
-                        logger.error("==== INVITED RETRYED ERROR")
+                    except Exception as e:
+                        logger.error("==== INVITED RETRYED ERROR", e)
 
                 if is_direct_message:
                     # Mark this room as a direct message!

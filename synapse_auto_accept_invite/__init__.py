@@ -16,6 +16,7 @@ import time
 from threading import Thread
 from typing import Any, Dict, Optional, Tuple
 from twisted.internet import reactor as _reactor
+from synapse.util import Clock
 
 import attr
 from synapse.module_api import EventBase, ModuleApi

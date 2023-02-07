@@ -13,9 +13,9 @@
 # limitations under the License.
 import logging
 import time
-import asyncio
 from threading import Thread
 from typing import Any, Dict, Optional, Tuple
+from twisted.internet import reactor as _reactor
 
 import attr
 from synapse.module_api import EventBase, ModuleApi
@@ -35,6 +35,7 @@ class InviteAutoAccepter:
         # Keep a reference to the Module API.
         self._api = api
         self._config = config
+        self.clock = Clock(_reactor)
 
         should_run_on_this_worker = config.worker_to_run_on == self._api.worker_name
 
@@ -102,22 +103,20 @@ class InviteAutoAccepter:
                 logger.error("==== INVITED - %s - %s", event.room_id, event.state_key)
 
                 # Make the user join the room.
-                def twrap():
-                    for i in range(10):
-                        time.sleep(i)
-                        try:
-                            logger.error("==== INVITED RETRYING")
-                            asyncio.run(self._api.update_room_membership(
-                                sender=event.state_key,
-                                target=event.state_key,
-                                room_id=event.room_id,
-                                new_membership="join",
-                            ))
-                            logger.error("==== INVITED RETRYING OK")
-                        except Exception as e:
-                            logger.error("==== INVITED RETRYING KO = [%s]", e)
+                for i in range(10):
+                    await self.clock.sleep(i)
 
-                Thread(target=twrap).run()
+                    try:
+                        logger.error("==== INVITED RETRYING")
+                        await self._api.update_room_membership(
+                            sender=event.state_key,
+                            target=event.state_key,
+                            room_id=event.room_id,
+                            new_membership="join",
+                        )
+                        logger.error("==== INVITED RETRYING OK")
+                    except Exception as e:
+                        logger.error("==== INVITED RETRYING KO = [%s]", e)
 
                 if is_direct_message:
                     # Mark this room as a direct message!
